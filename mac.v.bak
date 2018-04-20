@@ -1,0 +1,36 @@
+module mac(in, index_in, weight, index_w, out, index_o, clk, rst);
+// parameter   row_length = 28;
+// parameter   filter_size = 5;
+input       [7:0]in;
+input       [7:0]weight;
+input       [4:0]index_in;
+input       [4:0]index_w;
+input       clk, rst;
+
+output      [15:0]out;
+output      [5:0]index_o;
+
+reg         [15:0]out;
+reg         [4:0]index_o;
+
+
+
+
+always @(posedge clk or posedge rst) begin
+    if (rst) begin
+        out <= 16'b0;
+        index_o <= 5'b0;
+    end
+    else begin
+        if (5'b0 <= index_in - index_w <= 5'd23)
+            out <= in*weight;
+        else begin 
+            out <= 5'b0; 
+            index_o <= index_in - index_w;
+            end
+    end
+end
+
+endmodule
+
+

@@ -1,0 +1,58 @@
+`timescale 1ns/100ps
+module mac_tb;
+
+reg      [7:0]in_tb;
+reg      [7:0]weight_tb;
+reg      [7:0]index_in_tb;
+reg      [7:0]index_w_tb;
+reg      clk_tb;
+reg      rst_tb;
+
+wire      [15:0]out_tb;
+wire      [7:0]index_o_tb;
+
+mac aaa(
+
+    .in(in_tb),//输入的数据
+    .weight(weight_tb),//输入weight
+    .index_in(index_in_tb),//输入数据处于一行中的哪一个位置
+    .index_w(index_w_tb),//weight是一行中的第几个值
+    .out(out_tb),//输出的数据
+    .index_o(index_o_tb),//输出数据处于当前计算行的哪一个位置
+    .clk(clk_tb),
+    .rst(rst_tb)
+    );
+
+always begin
+    #20
+    clk_tb = ~clk_tb;
+end
+
+initial begin 
+    rst_tb         = 1'b0;
+    clk_tb         = 1'b0;
+    in_tb          = 8'd59;
+    weight_tb      = 8'd3;
+    index_in_tb    = 8'd2;
+    index_w_tb     = 8'd3;
+    #10 rst_tb     = 1'b1;
+    #10 rst_tb     = 1'b0;
+
+    #500;
+
+    index_in_tb    = 8'd25;
+    index_w_tb     = 8'd0;
+
+    #500;
+
+    index_in_tb    = 8'd21;
+    index_w_tb     = 8'd4;
+
+    #500;
+
+    $finish;
+
+end
+
+endmodule
+
