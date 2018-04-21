@@ -23,7 +23,6 @@ output [WORD_WIDTH - 1 : 0]data_out;
 
 reg [WORD_WIDTH -1 : 0]data_out;
 
-// reg [1:0]cnt;
 reg [WORD_WIDTH -1:0] mem [0 : RAM_DEPTH - 1];
 
 // initial begin

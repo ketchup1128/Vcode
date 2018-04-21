@@ -63,9 +63,6 @@ wire [7:0]index_o_4;
 
 wire [2:0] pop_index;
 
-// reg [4:0]cnt;
-// wire [4:0]row_flag;
-
 wire [7:0]in_reg;
 wire [7:0]index_in_reg;
 

@@ -45,6 +45,8 @@ wire [4:0]cnt_global_wire;
 wire [4:0]row_flag;
 wire row_fini;
 wire [15:0]input_fm_temp;
+wire Mem_in_EN_wire;
+reg Mem_in_EN;
 
 assign cnt_mem_w_wire = cnt_mem_w;
 assign cnt_mem_in_wire = cnt_mem_in;
@@ -53,6 +55,7 @@ assign cnt_global_wire = cnt_global;
 assign row_fini = (cnt_global == (row_flag + 2) ? 1 : 0);
 assign row_flag = (cnt_global == 1'b1 ? input_fm[15:8] : row_flag) ;
 assign input_fm = (cnt_global == (row_flag + 2) ? 0 : input_fm_temp);
+assign Mem_in_EN_wire = Mem_in_EN ;
 
 always @(posedge clk or posedge rst) begin
     if (rst) begin
@@ -121,6 +124,19 @@ always @(posedge clk or posedge rst)begin
     end
 end
 
+always @(negedge clk or posedge rst) begin
+    if (rst) begin        
+        Mem_in_EN <= 1'b1;      
+    end
+    else if(cnt_global == row_flag + 1'b1) begin
+        Mem_in_EN <= 0;
+    end
+    else begin
+        Mem_in_EN <= 1'b1;
+    end
+end
+
+
 Mem_PE #(
         .WORD_WIDTH  (WORD_WIDTH_IN),
         .ADDR_WIDTH  (ADDR_WIDTH_IN),
@@ -132,7 +148,8 @@ Mem_PE #(
         .data_out(input_fm_temp), 
         .addr(cnt_mem_in_wire), 
         .clk(clk), 
-        .rst(rst)
+        .rst(rst),
+        .Mem_EN(Mem_in_EN_wire)
         );
 
 always @(posedge clk or posedge rst)begin 
