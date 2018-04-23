@@ -15,9 +15,9 @@ parameter RAM_DEPTH_W      = (1 << ADDR_WIDTH_W);
 parameter FILENAME_W       = "C:/Users/Administrator/Desktop/DNN/Vcode/data/mem_weight.dat";
  
 parameter WORD_WIDTH_O     = 32;
-parameter ADDR_WIDTH_O     = 5;
-parameter RAM_DEPTH_O      = (1 << ADDR_WIDTH_O);
-parameter FILENAME_O       = "C:/Users/Administrator/Desktop/DNN/Vcode/data/mem_out.dat";
+// parameter ADDR_WIDTH_O     = 5;
+// parameter RAM_DEPTH_O      = (1 << ADDR_WIDTH_O);
+parameter FILENAME_O       = "C:/Users/Administrator/Desktop/DNN/Vcode/data/initialtozero.dat";
 
 wire [15:0]input_fm;
 reg  [4:0]cnt_mem_in;
@@ -170,29 +170,51 @@ Mem_5_out #(
         );
 
 
-always @(posedge clk or posedge rst)begin 
-    if (rst)begin
-        cnt_mem_o  <= 0;
-    end
-    else begin
-        if (cnt_global <= 2'd2)begin
-            cnt_mem_o <= cnt_mem_o;
-        end
-        else if (cnt_global == row_flag + 2)begin
-            cnt_mem_o <= cnt_mem_o + filter_size;
-        end
-        else begin
-            cnt_mem_o <= cnt_mem_o + pop_out ;
-        end
-    end
-end
+// always @(posedge clk or posedge rst)begin 
+//     if (rst)begin
+//         cnt_mem_o  <= 0;
+//     end
+//     else begin
+//         if (cnt_global <= 2'd2)begin
+//             cnt_mem_o <= cnt_mem_o;
+//         end
+//         else if (cnt_global == row_flag + 2)begin
+//             cnt_mem_o <= cnt_mem_o + filter_size;
+//         end
+//         else begin
+//             cnt_mem_o <= cnt_mem_o + pop_out ;
+//         end
+//     end
+// end
 
 
-Mem_5_in #(
-        .WORD_WIDTH  (WORD_WIDTH_O),
-        .ADDR_WIDTH  (ADDR_WIDTH_O),
-        .RAM_DEPTH   (RAM_DEPTH_O),
-        .FILENAME    (FILENAME_O) 
+// Mem_5_in #(
+//         .WORD_WIDTH  (WORD_WIDTH_O),
+//         .ADDR_WIDTH  (ADDR_WIDTH_O),
+//         .RAM_DEPTH   (RAM_DEPTH_O),
+//         .FILENAME    (FILENAME_O) 
+//     )
+//         Mem_PE_o(
+//         .data_in_0(out_fm_0), 
+//         .data_in_1(out_fm_1),
+//         .data_in_2(out_fm_2),
+//         .data_in_3(out_fm_3),
+//         .data_in_4(out_fm_4),
+//         .pop_num(pop_out),
+//         // .data_out(data_out_tb), 
+//         .addr(cnt_mem_o_wire), 
+//         .clk(clk), 
+//         .rst(rst),
+//         .row_fini(row_fini)
+//         );
+
+
+indexunfold #(
+        .ROW_LENGTH   (row_length),
+        .FILTER_SIZE  (filter_size),
+        .WORD_WIDTH   (WORD_WIDTH_O),
+        .RAM_DEPTH    (row_length - filter_size + 1),
+        .FILENAME     (FILENAME_O)
     )
         Mem_PE_o(
         .data_in_0(out_fm_0), 
@@ -202,7 +224,7 @@ Mem_5_in #(
         .data_in_4(out_fm_4),
         .pop_num(pop_out),
         // .data_out(data_out_tb), 
-        .addr(cnt_mem_o_wire), 
+        // .addr(cnt_mem_o_wire), 
         .clk(clk), 
         .rst(rst),
         .row_fini(row_fini)
